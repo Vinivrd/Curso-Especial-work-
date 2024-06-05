@@ -1,0 +1,90 @@
+<div class="row">
+    <h1>Atualizar Certificado de Estudos Especiais</h1>
+  </div>
+
+  <div class="row">
+    <div class="input-field col s5">
+      <select id="atualizar-enfase-select">
+        <option value="" disabled selected>Escolha um Certificado de Estudos Especiais</option>
+        ${opcoesEnfases}
+      </select>
+      <label>Certificado de Estudos Especiais</label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class='input-field col s6'>
+      <input id='atualizar-enfase-nome' type='text' class='validate' placeholder='Nome do Certificado de Estudos Especiais'>
+      <label for='atualizar-enfase-nome'>Nome do Certificado de Estudos Especiais</label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="input-field col s5">
+      <select id="atualizar-enfase-curso">
+        <option value="" disabled selected>Escolha um curso</option>
+        ${opcoesCursos}
+      </select>
+      <label>Curso do Certificado de Estudos Especiais</label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col s5">
+      <div class="row">
+        <ul class="collection with-header" id="atualizar-enfase-grupo1">
+          <li class="collection-header"><h4>Disciplinas do Grupo 1</h4></li>
+        </ul>
+        <div class="valign-wrapper">
+          <div class='input-field col s12'>
+            <input id='atualizar-enfase-disciplina-grupo1' type='text' class='validate'>
+            <label for='atualizar-enfase-disciplina-grupo1'>Nome da Disciplina</label>
+          </div>
+          <button id="atualizar-enfase-atualizar-disciplina-grupo1" class="secondary-content"><i class="material-icons">add</i></button>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class='input-field col s5'>
+          <input id='atualizar-enfase-min-disciplinas-g1' type='number' class='validate' value='0' min='0'>
+          <label for='atualizar-enfase-min-disciplinas-g1'>Mínimo de Disciplinas</label>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="col s5 offset-s1">
+      <div class="row">
+        <ul class="collection with-header" id="atualizar-enfase-grupo2">
+          <li class="collection-header"><h4>Disciplinas do Grupo 2</h4></li>
+        </ul>
+        <div class="valign-wrapper">
+          <div class='input-field col s12'>
+            <input id='atualizar-enfase-disciplina-grupo2' type='text' class='validate'>
+            <label for='atualizar-enfase-disciplina-grupo2'>Nome da Disciplina</label>
+          </div>
+          <button id="atualizar-enfase-atualizar-disciplina-grupo2" class="secondary-content"><i class="material-icons">add</i></button>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class='input-field col s5'>
+          <input id='atualizar-enfase-min-disciplinas-g2' type='number' class='validate' value='0' min='0'>
+          <label for='atualizar-enfase-min-disciplinas-g2'>Mínimo de Disciplinas</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class='input-field col s2'>
+      <input id='atualizar-enfase-min-creditos' type='number' class='validate' value='0' min='0'>
+      <label for='atualizar-enfase-min-creditos'>Mínimo de cŕeditos aula</label>
+    </div>
+  </div>
+
+  <div class="row">
+    <button id="atualizar-enfase-submit" class="btn waves-effect waves-light" type="submit" name="action">
+      Submit <i class="material-icons right">send</i>
+    </button>
+</div>

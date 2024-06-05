@@ -1,0 +1,32 @@
+<div class="row">
+    <h1>Gerar Formulário</h1>
+  </div>
+
+  <div class="row">
+    <div class='input-field col s6'>
+      <input id='formulario-nome' type='text' class='validate' placeholder='Nome do Formulário'>
+      <label for='formulario-nome'>Nome do Curso</label>
+    </div>
+  </div>
+
+  <div class="row valign-wrapper">
+    <div class='input-field col s1' style='margin-left: 0px;'>
+      <input id='formulario-ano' type='number' class='validate' min='2020' value='${new Date().getFullYear()}'>
+      <label for='formulario-ano'>Ano</label>
+    </div>
+
+    <label>
+      <input class="with-gap" name="formulario-semestre" type="radio" value="1" checked />
+      <span>Semestre 1</span>
+    </label>
+    <label>
+      <input class="with-gap" name="formulario-semestre" type="radio" value="2" />
+      <span>Semestre 2</span>
+    </label>
+  </div>
+
+  <div class="row">
+    <button id="formulario-submit" class="btn waves-effect waves-light" type="submit" name="action">
+      Submit <i class="material-icons right">send</i>
+    </button>
+</div>

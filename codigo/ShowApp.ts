@@ -10,7 +10,7 @@ function doGet() {
 function include(filename: string) {
   return HtmlService.createHtmlOutputFromFile(filename).getContent();
 }
-//oi
+
 // Monta a UI
 function showUI() {
   const cursos = getCursos();
