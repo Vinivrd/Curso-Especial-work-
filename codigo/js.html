@@ -1,0 +1,338 @@
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        updateMaterializeSelects();
+        updateMaterializeTabs();
+    });
+
+    // FUNÇÕES AUXILIARES
+
+    // Atualiza os tabs
+    function updateMaterializeTabs() {
+        let tabs = document.querySelectorAll('.tabs');
+        M.Tabs.init(tabs);
+    }
+
+    // Atualiza os selects
+    function updateMaterializeSelects() {
+        let elems = document.querySelectorAll('select');
+        let instances = M.FormSelect.init(elems);
+    }
+
+    // Recarrega a página
+    function refresh() {
+        google.script.run
+            .withSuccessHandler(function (url) {
+                window.open(url, '_top');
+            })
+            .getScriptURL();
+    }
+
+    // Encurta a busca de elementos por id
+    function byId(id) {
+        return document.getElementById(id);
+    }
+
+    // Carrega os dados dos cursos para prevenir repetições
+    let cursos = [];
+    google.script.run.withSuccessHandler((data) => {cursos = data}).getCursos();
+
+    // Carrega os dados das ênfases para popular os previews e prevenir repetições
+    let enfases = [];
+    google.script.run.withSuccessHandler((data) => {enfases = data}).getEnfases();
+
+    // Adicionas os gatilhos de preview das ênfases
+    byId('atualizar-enfase-select').addEventListener('change', (event) => previewEnfase(event.target.value, 'atualizar'))
+    byId('remover-enfase-select').addEventListener('change', (event) => previewEnfase(event.target.value, 'remover'))
+    
+    // Preenche um formulário com os dados de uma ênfase
+    function previewEnfase(value, form) {
+
+        let enfase = enfases.find(e => e[0] === value.split('-')[0] && e[1] === value.split('-')[1]);
+
+        byId(form + '-enfase-nome').value = enfase[0];
+        byId(form + '-enfase-min-disciplinas-g1').value = enfase[3];
+        byId(form + '-enfase-min-disciplinas-g2').value = enfase[5];
+        byId(form + '-enfase-min-creditos').value = enfase[6];
+
+        byId(form + '-enfase-curso').value = enfase[1];
+        updateMaterializeSelects();
+        
+        let list1 = byId(form + '-enfase-grupo1');
+        list1.innerHTML = '<li class="collection-header"><h4>Disciplinas do Grupo 1</h4></li>';
+        let list2 = byId(form + '-enfase-grupo2');
+        list2.innerHTML = '<li class="collection-header"><h4>Disciplinas do Grupo 2</h4></li>';
+
+        enfase[2].map(disciplina => addDisciplinaEnfase(byId(form + '-enfase-disciplina-grupo1'), disciplina, list1, (form === 'atualizar') ? true : false));
+        enfase[4].map(disciplina => addDisciplinaEnfase(byId(form + '-enfase-disciplina-grupo2'), disciplina, list2, (form === 'atualizar') ? true : false));
+    }
+
+    // Adiciona os gatilhos de adição de disciplinas
+    byId("adicionar-enfase-adicionar-disciplina-grupo1").addEventListener("click", 
+        () => addDisciplinaEnfase(byId('adicionar-enfase-disciplina-grupo1'), byId('adicionar-enfase-disciplina-grupo1').value, byId('adicionar-enfase-grupo1')));
+    byId("adicionar-enfase-adicionar-disciplina-grupo2").addEventListener("click", 
+        () => addDisciplinaEnfase(byId('adicionar-enfase-disciplina-grupo2'), byId('adicionar-enfase-disciplina-grupo2').value, byId('adicionar-enfase-grupo2')));
+    byId("atualizar-enfase-atualizar-disciplina-grupo1").addEventListener("click", 
+        () => addDisciplinaEnfase(byId('atualizar-enfase-disciplina-grupo1'), byId('atualizar-enfase-disciplina-grupo1').value, byId('atualizar-enfase-grupo1')));
+    byId("atualizar-enfase-atualizar-disciplina-grupo2").addEventListener("click", 
+        () => addDisciplinaEnfase(byId('atualizar-enfase-disciplina-grupo2'), byId('atualizar-enfase-disciplina-grupo2').value, byId('atualizar-enfase-grupo2')));
+
+    // Adiciona uma disciplina ao formulário
+    function addDisciplinaEnfase(input, disciplina, list, editable=true) {
+        if (disciplina === '') {
+            alert('Todos os campos devem ser preenchidos.');
+            return;
+        }
+
+        let newItem = document.createElement('li');
+        newItem.className = "collection-item";
+        newItem.innerHTML = `
+            <div class="valign-wrapper">
+                <span class="col s12"> ${disciplina} </span>
+                ${editable ? 
+                    "<button id='adicionar-enfase-remove-disciplina' class='secondary-content' onclick='removeDisciplinaEnfase(this)'> \
+                        <i class='material-icons'>delete</i> \
+                    </button>" 
+                    : ''}
+            </div>`;
+
+        list.appendChild(newItem);
+
+        if (editable)
+            input.value = '';
+    }
+
+    // Retorna as disciplinas de um grupo do formulário
+    function getDisciplinasEnfase(list) {
+        let disciplinas = [];
+
+        for (const child of list.children) 
+            if (child.firstElementChild.firstElementChild)
+               disciplinas.push(child.firstElementChild.firstElementChild.innerText);
+
+        return disciplinas;
+    }
+
+    // Remove uma disciplina do formulário
+    function removeDisciplinaEnfase(element) {
+        element.parentNode.parentNode.parentNode.removeChild(element.parentNode.parentNode);
+    }
+
+    // ADICIONAR CURSO
+    byId('adicionar-curso-submit').addEventListener('click', submitAdicionarCurso);
+
+    function submitAdicionarCurso() {
+        let name = byId('adicionar-curso-nome').value;
+
+        if (name === '') {
+            alert('Todos os campos devem ser preenchidos.');
+            return;
+        }
+
+        // Checa se o curso existe
+        if (cursos.indexOf(name) !== -1) {
+            alert('Erro: O novo curso está em conflito com outro existente');
+            return;
+        }
+
+        google.script.run.adicionarCurso(name);
+        alert('Submetido com sucesso');
+
+        refresh();
+    }
+
+    // ADICIONAR ÊNFASE
+    byId('adicionar-enfase-submit').addEventListener('click', submitAdicionarEnfase);
+
+    function submitAdicionarEnfase() {
+        let name = byId('adicionar-enfase-nome').value;
+        let minDisciplinasGrupo1 = byId('adicionar-enfase-min-disciplinas-g1').value;
+        let minDisciplinasGrupo2 = byId('adicionar-enfase-min-disciplinas-g2').value;
+        let minCreditos = byId('adicionar-enfase-min-creditos').value;
+        let curso = byId('adicionar-enfase-curso').value;
+
+        let disciplinasGrupo1 = [];
+        for (const child of byId('adicionar-enfase-grupo1').children) {
+            if (child.firstElementChild.firstElementChild)
+               disciplinasGrupo1.push(child.firstElementChild.firstElementChild.innerText);
+        }
+        
+        let disciplinasGrupo2 = [];
+        for (const child of byId('adicionar-enfase-grupo2').children) {
+            if (child.firstElementChild.firstElementChild)
+               disciplinasGrupo2.push(child.firstElementChild.firstElementChild.innerText);
+        }
+
+        if (name === '' || disciplinasGrupo1.length <= 0 || curso === '') {
+            alert('Todos os campos devem ser preenchidos.');
+            return;
+        }
+
+        if (disciplinasGrupo1.length < minDisciplinasGrupo1) {
+            alert(`O grupo 1 deve ter pelo menos ${minDisciplinasGrupo1} ${minDisciplinasGrupo1 > 1 ? 'disciplinas' : 'disciplina'}.`);
+            return;
+        }
+
+        if (disciplinasGrupo2.length < minDisciplinasGrupo2) {
+            alert(`O grupo 2 deve ter pelo menos ${minDisciplinasGrupo2} ${minDisciplinasGrupo2 > 1 ? 'disciplinas' : 'disciplina'}.`);
+            return;
+        }
+
+        for (const e of enfases) {
+            if (e[0] === name && e[1] === curso) {
+                alert('Erro: O novo certificado de estudos especiais está em conflito com outro existente');
+                return;
+            }
+        }
+
+        google.script.run.adicionarEnfase(name, curso, disciplinasGrupo1, minDisciplinasGrupo1, disciplinasGrupo2, minDisciplinasGrupo2, minCreditos);
+        alert('Submetido com sucesso');
+        
+        refresh();
+    }
+
+    // ATUALIZAR CURSO
+    byId('atualizar-curso-submit').addEventListener('click', submitAtualizarCurso);
+    function submitAtualizarCurso() {
+        let oldName = byId('atualizar-curso-select').value;
+        let newName = byId('atualizar-curso-nome').value;
+
+        if (newName === '' || oldName === '') {
+            alert('Todos os campos devem ser preenchidos.');
+            return;
+        }
+
+        // Checa se o novo nome do curso existe
+        if (cursos.indexOf(newName) !== -1) {
+            alert('Erro: O novo nome do curso está em conflito com outro existente');
+            return;
+        }
+
+        google.script.run.atualizarCurso(oldName, newName);
+        alert('Submetido com sucesso');
+
+        refresh();
+    }
+
+    // ATUALIZAR ÊNFASE
+    byId('atualizar-enfase-submit').addEventListener('click', submitAtualizarEnfase);
+
+    function submitAtualizarEnfase() {
+        let selectedEnfase = byId('atualizar-enfase-select').value;
+
+        let oldName = selectedEnfase.split('-')[0];
+        let oldCourse = selectedEnfase.split('-')[1];
+
+        let oldEnfase = enfases.find(e => e[0] === oldName && e[1] === oldCourse);
+        
+        let newName = byId('atualizar-enfase-nome').value;
+        let minDisciplinasGrupo1 = byId('atualizar-enfase-min-disciplinas-g1').value;
+        let minDisciplinasGrupo2 = byId('atualizar-enfase-min-disciplinas-g2').value;
+        let minCreditos = byId('atualizar-enfase-min-creditos').value;
+        let curso = byId('atualizar-enfase-curso').value;
+        
+        let disciplinasGrupo1 = [];
+        for (const child of byId('atualizar-enfase-grupo1').children) {
+            if (child.firstElementChild.firstElementChild)
+               disciplinasGrupo1.push(child.firstElementChild.firstElementChild.innerText);
+        }
+        
+        let disciplinasGrupo2 = [];
+        for (const child of byId('atualizar-enfase-grupo2').children) {
+            if (child.firstElementChild.firstElementChild)
+               disciplinasGrupo2.push(child.firstElementChild.firstElementChild.innerText);
+        }
+
+
+        if (newName === '' || disciplinasGrupo1.length <= 0 || curso === '') {
+            alert('Todos os campo');
+            return;
+        }
+
+        if (disciplinasGrupo1.length < minDisciplinasGrupo1) {
+            alert(`O grupo 1 deve ter pelo menos ${minDisciplinasGrupo1} ${minDisciplinasGrupo1 > 1 ? 'disciplinas' : 'disciplina'}.`);
+            return;
+        }
+
+        if (disciplinasGrupo2.length < minDisciplinasGrupo2) {
+            alert(`O grupo 2 deve ter pelo menos ${minDisciplinasGrupo2} ${minDisciplinasGrupo2 > 1 ? 'disciplinas' : 'disciplina'}.`);
+            return;
+        }
+
+        for (const e of enfases) {
+            if (e[0] === newName && e[1] === curso) {
+                alert('Erro: Os novos dados do certificado de estudos especiais estão em conflito com outro existente');
+                return;
+            }
+        }
+
+        let newEnfase = [newName, curso, disciplinasGrupo1, minDisciplinasGrupo1, disciplinasGrupo2, minDisciplinasGrupo2, minCreditos];
+
+        google.script.run.atualizarEnfase(oldEnfase, newEnfase);
+        alert('Submetido com sucesso');
+
+        refresh();
+    }
+
+    // REMOVER CURSO
+    byId('remover-curso-submit').addEventListener('click', submitRemoverCurso);
+
+    function submitRemoverCurso() {
+        let curso = byId('remover-curso-select').value;
+
+        if (curso === '') {
+            alert('Todos os campos devem ser preenchidos.');
+            return;
+        }
+
+        for (const e of enfases) {
+            if (e[1] === curso) {
+                alert('Erro: O curso a ser removido tem um ou mais certificados de estudos especiais cadastrados');
+                return;
+            }
+        }
+
+        google.script.run.removerCurso(curso);
+        alert('Submetido com sucesso');
+
+        refresh();
+    }
+
+    // REMOVER ÊNFASE
+    byId('remover-enfase-submit').addEventListener('click', submitRemoverEnfase);
+
+    function submitRemoverEnfase() {
+        let enfase = byId('remover-enfase-select').value;
+
+        if (enfase === '') {
+            alert('Todos os campos devem ser preenchidos.');
+            return;
+        }
+
+        let name = enfase.split('-')[0];
+        let course = enfase.split('-')[1];
+
+        google.script.run.removerEnfase(name, course);
+        alert('Submetido com sucesso');
+
+        refresh();
+    }
+
+    // GERAR FORMULÁRIO
+    byId('formulario-submit').addEventListener('click', submitGerarFormulario);
+
+    function submitGerarFormulario() {
+        let nome = byId('formulario-nome').value;
+        let ano = byId('formulario-ano').value;
+        let semestre = document.querySelector('input[name="formulario-semestre"]:checked').value;
+
+        if (nome === '' || ano === '' || semestre === '') {
+            alert('Todos os campos devem ser preenchidos.');
+            return;
+        }
+
+        google.script.run.createForm(nome, ano, semestre);
+        alert('Submetido com sucesso');
+
+        refresh();
+    }
+</script>
