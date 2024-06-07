@@ -111,8 +111,8 @@ function adicionarCursoForm() {
     </div>
 
     <div class="row">
-      <button id="adicionar-curso-submit" class="btn waves-effect waves-light" type="submit" name="action">
-        Submit <i class="material-icons right">send</i>
+      <button id="adicionar-curso-submit" class="btn waves-effect waves-light red lighten-2" type="submit" name="action">
+        ADICIONAR<i class="material-icons right">send</i>
       </button>
     </div>
   `).getContent();
@@ -195,8 +195,8 @@ function adicionarEnfaseForm(opcoesCursos: string) {
     </div>
 
     <div class="row">
-      <button id="adicionar-enfase-submit" class="btn waves-effect waves-light" type="submit" name="action">
-        Submit <i class="material-icons right">send</i>
+      <button id="adicionar-enfase-submit" class="btn waves-effect waves-light red lighten-2" type="submit" name="action">
+        ADICIONAR <i class="material-icons right">send</i>
       </button>
     </div>
   `).getContent();
@@ -226,8 +226,8 @@ function atualizarCursoForm(opcoesCursos: string) {
     </div>
 
     <div class="row">
-      <button id="atualizar-curso-submit" class="btn waves-effect waves-light" type="submit" name="action">
-        Submit <i class="material-icons right">send</i>
+      <button id="atualizar-curso-submit" class="btn waves-effect waves-light red lighten-2" type="submit" name="action">
+        ATUALIZAR <i class="material-icons right">send</i>
       </button>
     </div>
   `).getContent();
@@ -277,7 +277,7 @@ function atualizarEnfaseForm(opcoesEnfases: string, opcoesCursos: string) {
               <input id='atualizar-enfase-disciplina-grupo1' type='text' class='validate'>
               <label for='atualizar-enfase-disciplina-grupo1'>Nome da Disciplina</label>
             </div>
-            <button id="atualizar-enfase-atualizar-disciplina-grupo1" class="secondary-content"><i class="material-icons">add</i></button>
+            <button id="atualizar-enfase-atualizar-disciplina-grupo1" class="secondary-content "><i class="material-icons">add</i></button>
           </div>
         </div>
 
@@ -300,7 +300,7 @@ function atualizarEnfaseForm(opcoesEnfases: string, opcoesCursos: string) {
               <input id='atualizar-enfase-disciplina-grupo2' type='text' class='validate'>
               <label for='atualizar-enfase-disciplina-grupo2'>Nome da Disciplina</label>
             </div>
-            <button id="atualizar-enfase-atualizar-disciplina-grupo2" class="secondary-content"><i class="material-icons">add</i></button>
+            <button id="atualizar-enfase-atualizar-disciplina-grupo2" class="secondary-content red lighten-2"><i class="material-icons">add</i></button>
           </div>
         </div>
 
@@ -321,8 +321,8 @@ function atualizarEnfaseForm(opcoesEnfases: string, opcoesCursos: string) {
     </div>
 
     <div class="row">
-      <button id="atualizar-enfase-submit" class="btn waves-effect waves-light" type="submit" name="action">
-        Submit <i class="material-icons right">send</i>
+      <button id="atualizar-enfase-submit" class="btn waves-effect waves-light red lighten-2" type="submit" name="action">
+        ATUALIZAR <i class="material-icons right">send</i>
       </button>
     </div>
   `).getContent();
@@ -345,8 +345,8 @@ function removerCursoForm(opcoesCursos: string) {
     </div>
 
     <div class="row">
-      <button id="remover-curso-submit" class="btn waves-effect waves-light" type="submit" name="action">
-        Submit <i class="material-icons right">send</i>
+      <button id="remover-curso-submit" class="btn waves-effect waves-light red lighten-2" type="submit" name="action">
+        REMOVER <i class="material-icons right">send</i>
       </button>
     </div>
   `).getContent();
@@ -369,8 +369,8 @@ function removerEnfaseForm(opcoesEnfases: string) {
     </div>
 
     <div class="row">
-      <button id="remover-enfase-submit" class="btn waves-effect waves-light" type="submit" name="action">
-        Submit <i class="material-icons right">send</i>
+      <button id="remover-enfase-submit" class="btn waves-effect waves-light red lighten-2" type="submit" name="action">
+        REMOVER <i class="material-icons right">send</i>
       </button>
     </div>
 
@@ -463,8 +463,8 @@ function gerarFormulario() {
     </div>
 
     <div class="row">
-      <button id="formulario-submit" class="btn waves-effect waves-light" type="submit" name="action">
-        Submit <i class="material-icons right">send</i>
+      <button id="formulario-submit" class="btn waves-effect waves-light red lighten-2" type="submit" name="action">
+        ENVIAR <i class="material-icons right">send</i>
       </button>
     </div>
   `).getContent();
