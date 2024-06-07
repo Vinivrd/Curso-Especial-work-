@@ -3,10 +3,10 @@ const data_sheet = spreadsheet.getSheetByName("Dados");
 const config_sheet = spreadsheet.getSheetByName("Configs");
 
 const formato_padrao = DriveApp.getFileById("1daKA66rl9DsPiTqOAgtN3B5ySbIwWypyTP9kaUXYgEg");
-const formato_bcd = DriveApp.getFileById("1IkACQC2H-OFZRJnzWS3JFDUZed4IB8CC_PG8kg2xvas");
+const formato_bcd = DriveApp.getFile.+ById("1IkACQC2H-OFZRJnzWS3JFDUZed4IB8CC_PG8kg2xvas");
 const formato_bsi = DriveApp.getFileById("1YFe75OSLXdLPpsGktcNhx6TfPg6OCSqKbClMZucL-eE");
 
-const folder = DriveApp.getFolderById("1kcEbTJpZTeUzYxsV10vvPbmRxotnVfau");
+const folder = DriveApp.getFolderById("1MsW0roUm_FqLkzcvWWeGutbEhc18A2j5");
 
 function criarPDFs() {
   // Configura os dados 
@@ -15,17 +15,22 @@ function criarPDFs() {
   const new_folder = folder.createFolder(`${config_data[1][0]} ${config_data[1][1]}o Semestre - ${new Date()}`);
 
   const data_rows = data_sheet.getDataRange().getValues();
+
   data_rows.forEach((data_row, index) => {
     if (index === 0) return; // Ignora o cabeçalho
-
     // Escolhe o modelo a ser usado 
-    let doc;
-    if (data_row[5] === 'BCD') {
-      doc = formato_bcd;
-    } else if (data_row[5] === 'BSI') {
-      doc = formato_bsi;
-    } else {
-      doc = formato_padrao;
+    let doc; //** pode ser um erro 
+
+    switch (data_row[5]) {
+      case 'BCD':
+        doc = formato_bcd;
+        break;
+      case 'BSI':
+        doc = formato_bsi;
+        break;
+      default:
+        doc = formato_padrao;
+        break;
     }
 
     // Cria uma cópia do modelo e abre ele
@@ -67,6 +72,8 @@ function criarPDFs() {
     // Descarta os Slides
     copy.setTrashed(true);
   });
+
+  
 }
 
 function gerarTextoDepartamentos(departamentos) {
