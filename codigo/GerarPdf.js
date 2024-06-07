@@ -9,28 +9,22 @@ const formato_bsi = DriveApp.getFileById("1YFe75OSLXdLPpsGktcNhx6TfPg6OCSqKbClMZ
 const folder = DriveApp.getFolderById("1kcEbTJpZTeUzYxsV10vvPbmRxotnVfau");
 
 function criarPDFs() {
-  //Configura os dados 
+  // Configura os dados 
   const config_data = config_sheet.getDataRange().getValues();
   // Cria uma pasta onde os PDFs serão salvos
   const new_folder = folder.createFolder(`${config_data[1][0]} ${config_data[1][1]}o Semestre - ${new Date()}`);
 
   const data_rows = data_sheet.getDataRange().getValues();
-  data_rows.map((data_row) => {
-    if (data_rows.indexOf(data_row) === 0)
-      return;
+  data_rows.forEach((data_row, index) => {
+    if (index === 0) return; // Ignora o cabeçalho
 
     // Escolhe o modelo a ser usado 
     let doc;
-    
     if (data_row[5] === 'BCD') {
       doc = formato_bcd;
-    }
-
-    else if (data_row[5] === 'BSI') {
+    } else if (data_row[5] === 'BSI') {
       doc = formato_bsi;
-    }
-
-    else {
+    } else {
       doc = formato_padrao;
     }
 
@@ -38,9 +32,9 @@ function criarPDFs() {
     const copy = doc.makeCopy(`${data_row[1]} - ${data_row[0]}`, new_folder);
     const mod = SlidesApp.openById(copy.getId());
 
-    //Preenche Slides:  Substitui placeholders nos slides com os dados da planilha.
+    // Preenche Slides: Substitui placeholders nos slides com os dados da planilha.
     const slides = mod.getSlides();
-    slides.map((slide) => {
+    slides.forEach((slide) => {
       slide.replaceAllText('{{nome do aluno}}', data_row[1]);
       slide.replaceAllText('{{nome do curso}}', data_row[2]);
       slide.replaceAllText('{{ano de término do curso}}', data_row[3]);
@@ -49,11 +43,11 @@ function criarPDFs() {
       slide.replaceAllText('{{soma}}', data_row[8]);
 
       slide.replaceAllText('{{nome do diretor do ICMC}}', config_data[1][2]);
-      slide.replaceAllText('{{data da colação}}', Utilities.formatDate(new Date(config_data[1][3]), "GMT-3", "MM/dd/yyyy"));
+      slide.replaceAllText('{{data da colação}}', Utilities.formatDate(new Date(config_data[1][3]), "GMT-3", "dd/MM/yyyy"));
       slide.replaceAllText('{{nome do presidente da CG}}', config_data[1][4]);
     });
 
-    //Gera e insere o texto dos departamentos. 
+    // Gera e insere o texto dos departamentos. 
     const texto_departamentos = gerarTextoDepartamentos(JSON.parse(data_row[6]));
     slides[0].replaceAllText("{{nome dos Departamentos}}", texto_departamentos);
 
@@ -72,20 +66,17 @@ function criarPDFs() {
 
     // Descarta os Slides
     copy.setTrashed(true);
-  })
+  });
 }
 
 function gerarTextoDepartamentos(departamentos) {
   let texto_departamentos = '';
 
-  departamentos.map((departamento) => {
-    // Adiciona os separadores * melhor inverter, fica melhor otimizado o código 
-    let index = departamentos.indexOf(departamento);
-    if (index > 0) { // ignora o primeiro departamento
-      if (index === departamentos.length - 1) // é o último departamento
+  departamentos.forEach((departamento, index) => {
+    if (index > 0) { // Ignora o primeiro departamento
+      if (index === departamentos.length - 1) // É o último departamento
         texto_departamentos += ' e ';
-
-      else // não é o último departamento
+      else // Não é o último departamento
         texto_departamentos += ', ';
     }
 
@@ -96,7 +87,7 @@ function gerarTextoDepartamentos(departamentos) {
 }
 
 function preencherTabela(table, disciplinas) {
-  disciplinas.map((disciplina) => {
+  disciplinas.forEach((disciplina) => {
     // Cria uma nova linha
     table.insertRow(2);
     const new_row = table.getRow(2);
@@ -108,5 +99,7 @@ function preencherTabela(table, disciplinas) {
   });
 
   // Remove a linha de exemplo
-  table.getRow(1).remove();
+  if (table.getNumRows() > 1) {
+    table.getRow(1).remove();
+  }
 }
