@@ -49,6 +49,7 @@ function showUI() {
         </div>
 
         <div id="atualizar" class="col s12">
+        
           <ul class="secondary tabs">
             <li class="tab col s5 offset-s1" ${hasCursos ? '' : 'disabled'}><a href="#atualizar-curso">Atualizar Curso</a></li>
             <li class="tab col s5 ${hasEnfases ? '' : 'disabled'}"><a href="#atualizar-enfase">Atualizar Certificado de Estudos Especiais</a></li>

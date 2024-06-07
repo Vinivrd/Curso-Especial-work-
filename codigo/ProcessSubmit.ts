@@ -47,7 +47,7 @@ function adicionarEnfase(name: string[], course: string, classesGroup1: string[]
 
 function atualizarCurso(oldName: string, newName: string) {
     Logger.log(`Atualizando curso: ${oldName} -> ${newName}`);
-
+    
     if (cursosSheet === null) {
         Logger.log('Erro: Não foi possível encontrar a planilha de cursos');
         return;
