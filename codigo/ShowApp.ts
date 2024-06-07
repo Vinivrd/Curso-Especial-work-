@@ -474,7 +474,6 @@ function gerarCertificados() {
   return HtmlService.createHtmlOutput(`
     <div class="row">
       <h3>Gerar Certificado de Estudos Especiais</h3>
-
        <button id="certificado-submit" class="btn waves-effect waves-light red lighten-2" type="button" name="action">
         GERAR <i class="material-icons right">send</i>
       </button>
