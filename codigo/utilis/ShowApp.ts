@@ -1,6 +1,6 @@
 // Cria e envia a página
 function doGet() {
-  let template = HtmlService.createTemplateFromFile('codigo/index');
+  let template = HtmlService.createTemplateFromFile('codigo/html/index');
   template.ui = showUI();
 
   return template.evaluate();
@@ -473,7 +473,12 @@ function gerarFormulario() {
 function gerarCertificados() {
   return HtmlService.createHtmlOutput(`
     <div class="row">
-      <h1>Gerar Certificado de Estudos Especiais</h1>
+      <h3>Gerar Certificado de Estudos Especiais</h3>
+
+       <button id="certificado-submit" class="btn waves-effect waves-light red lighten-2" type="button" name="action">
+        GERAR <i class="material-icons right">send</i>
+      </button>
+
     </div>
   `).getContent();
 }

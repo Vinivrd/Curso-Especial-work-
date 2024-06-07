@@ -1,0 +1,13 @@
+nome do aluno
+nome do curso 
+termino do curso 
+os créditos 
+nome do departamento 
+
+nome do presidente da cg
+nome do diretor do icmc
+
+
+Data da coação de grau 
+
+Código e nome da displina  nota  semestre/ano  carga horária ---> soma da carga horária 

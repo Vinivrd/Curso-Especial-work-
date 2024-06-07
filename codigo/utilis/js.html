@@ -4,6 +4,14 @@
         updateMaterializeTabs();
     });
 
+    document.getElementById('certificado-submit').addEventListener('click',() => {
+        //enviar uma solicitação para o lado do servidor
+        google.script.run.criarPDFs();
+        alert("Uma pasta foi criada com o certificado")
+        console.log('Acho que foi')
+    });
+
+
     // FUNÇÕES AUXILIARES
 
     // Atualiza os tabs
