@@ -35,8 +35,8 @@ function showUI() {
 
         <div id="adicionar" class="col s12">
           <ul class="secondary tabs">
-            <li class="tab col s5 offset-s1"><a href="#adicionar-curso">Adicionar Curso</a></li>
-            <li class="tab col s5 ${hasCursos ? '' : 'disabled'}"><a href="#adicionar-enfase">Adicionar Certificado de Estudos Especiais</a></li>
+            <li class="tab col s6 offset-s1"><a href="#adicionar-curso">Adicionar Curso</a></li>
+            <li class="tab col 6 ${hasCursos ? '' : 'disabled'}"><a href="#adicionar-enfase">Adicionar Certificado de Estudos Especiais</a></li>
           </ul>
 
           <div id="adicionar-curso" class="col s8 offset-s2">
